@@ -48,15 +48,16 @@ class WeatherPrediction {
   }
 
   String getTemp(int index) {
-    return predictions[index]['consolidated_weather']['the_temp'];
+    var temp = predictions[index]['consolidated_weather']['the_temp'];
+    return temp.toStringAsFixed(1);
   }
 
   String getVisibility(int index) {
-    return predictions[index]['consolidated_weather']['visibility'];
+    return predictions[index]['consolidated_weather']['visibility'].toStringAsFixed(1);
   }
 
   String getWindSpeed(int index) {
-    return predictions[index]['consolidated_weather']['wind_speed'];
+    return predictions[index]['consolidated_weather']['wind_speed'].toStringAsFixed(1);
   }
 
   String getWindDirection(int index) {
@@ -68,11 +69,11 @@ class WeatherPrediction {
   }
 
   String getHumidity(int index) {
-    return predictions[index]['consolidated_weather']['humidity'];
+    return predictions[index]['consolidated_weather']['humidity'].toStringAsFixed(0);
   }
 
   String getPredictability(int index) {
-    return predictions[index]['consolidated_weather']['predictability'];
+    return predictions[index]['consolidated_weather']['predictability'].toString();
   }
 
 }
