@@ -18,8 +18,14 @@ class _HomeState extends State<Home> {
 
   GeoHelper gh = GeoHelper();
 
+  Map data = {};
+
   @override
   Widget build(BuildContext context) {
+
+    data = data.isNotEmpty ? data : ModalRoute.of(context)!.settings.arguments as Map;
+    print(data);
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -74,8 +80,18 @@ class _HomeState extends State<Home> {
                 ),
                 SizedBox(height: 10.0),
                 Center(
+                  child: Text(
+                    data['time'],
+                    style: TextStyle(
+                      fontSize: 66,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Center(
                   child: Image(
-                    image: NetworkImage('https://outrain-s3.s3.ap-southeast-1.amazonaws.com/png/sn.png'),
+                    image: NetworkImage('https://outrain-s3.s3.ap-southeast-1.amazonaws.com/png/${data['pred'].getWeatherAbbr(0)}.png'),
                     height: 200,
                     width: 200,
                   ),
@@ -83,7 +99,7 @@ class _HomeState extends State<Home> {
                 SizedBox(height: 10.0),
                 Center(
                   child: Text(
-                    'CERAH',
+                    data['pred'].getWeatherName(0),
                     style: TextStyle(
                       color: Colors.white,
                       letterSpacing: 2.0,
@@ -94,7 +110,7 @@ class _HomeState extends State<Home> {
                 SizedBox(height: 10.0),
                 Center(
                   child: Text(
-                    '32°',
+                    '${data['pred'].getTemp(0)}°',
                     style: TextStyle(
                       color: Colors.white,
                       letterSpacing: 2.0,
@@ -129,7 +145,7 @@ class _HomeState extends State<Home> {
                         ),
                         SizedBox(height: 5.0),
                         Text(
-                          '6.5 mph',
+                          '${data['pred'].getWindSpeed(0)} mph',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 15.0,
@@ -154,7 +170,7 @@ class _HomeState extends State<Home> {
                         ),
                         SizedBox(height: 5.0),
                         Text(
-                          '70%',
+                          '${data['pred'].getHumidity(0)}%',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 15.0,
@@ -179,7 +195,7 @@ class _HomeState extends State<Home> {
                         ),
                         SizedBox(height: 5.0),
                         Text(
-                          '8.7 miles',
+                          '${data['pred'].getVisibility(0)} miles',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 15.0,
@@ -204,7 +220,7 @@ class _HomeState extends State<Home> {
                         ),
                         SizedBox(height: 5.0),
                         Text(
-                          '70%',
+                          '${data['pred'].getPredictability(0)}%',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 15.0,
