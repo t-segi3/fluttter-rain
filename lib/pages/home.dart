@@ -14,7 +14,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   String datenow = DateFormat('dd MMMM yyyy').format(DateTime.now());
   String location ='Null, Press Button';
-  String city = "Jakarta";
+  String city = "Loading..";
 
   GeoHelper gh = GeoHelper();
 
@@ -69,7 +69,7 @@ class _HomeState extends State<Home> {
                     ),
                     SizedBox(width: 10.0),
                     Text(
-                      '${city}',
+                      '${data['pred'].getCity(0)}',
                       style: TextStyle(
                         color: Colors.grey[400],
                         fontSize: 18.0,

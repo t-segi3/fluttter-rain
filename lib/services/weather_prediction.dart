@@ -27,6 +27,10 @@ class WeatherPrediction {
     }
   }
 
+  String getCity(int index) {
+    return predictions[index]['title'];
+  }
+
   String getApplicableDate(int index) {
       return predictions[index]['consolidated_weather']['applicable_date'];
   }
