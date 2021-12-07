@@ -28,10 +28,15 @@ class _HomeState extends State<Home> {
 
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-            colors: [Color(0xff15a7f1), Color(0xff062E42)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter
+        // gradient: LinearGradient(
+        //     colors: [Color(0xff15a7f1), Color(0xff062E42)],
+        //     begin: Alignment.topCenter,
+        //     end: Alignment.bottomCenter
+        // ),
+        image: DecorationImage(
+          image: AssetImage('assets/time_of_day_bg/${data['timeOfDay']}.png'),
+          colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.4), BlendMode.dstATop),
+          fit: BoxFit.cover,
         ),
       ),
       child: Scaffold(

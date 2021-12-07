@@ -18,7 +18,7 @@ class _LoadingState extends State<Loading> {
     WorldTime waktu = WorldTime(location: 'Jakarta', flag: 'indonesian.png', url: 'Asia/Jakarta');
     await waktu.getTime();
 
-    WeatherPrediction pred = WeatherPrediction(woeid: '1047372');
+    WeatherPrediction pred = WeatherPrediction(woeid: '1047378');
     await pred.getPrediction();
 
     Navigator.pushReplacementNamed(context, '/home', arguments: {
@@ -26,6 +26,7 @@ class _LoadingState extends State<Loading> {
       'flag': waktu.flag,
       'time': waktu.time,
       'isDayTime': waktu.isDayTime,
+      'timeOfDay': waktu.timeOfDay,
       'pred': pred
     });
   }
