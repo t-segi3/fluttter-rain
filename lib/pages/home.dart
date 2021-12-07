@@ -65,23 +65,36 @@ class _HomeState extends State<Home> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.location_on,
-                      color: Colors.grey[400],
+                Center(
+                  child: FlatButton.icon(
+                    onPressed: () async {
+                      dynamic result = await Navigator.pushNamed(context, '/location');
+
+                      setState(() {
+                        data = {
+                          'time': result['time'],
+                          'location': result['location'],
+                          'flag': result['flag'],
+                          'isDayTime': result['isDayTime'],
+                          'timeOfDay': result['timeOfDay'],
+                          'pred': result['pred']
+                        };
+                        print(data['pred'].getWeatherAbbr(0));
+                      });
+                    },
+                    icon: Icon(
+                      Icons.edit_location,
+                      color: Colors.grey[300],
                     ),
-                    SizedBox(width: 10.0),
-                    Text(
+                    label: Text(
                       '${data['pred'].getCity(0)}',
                       style: TextStyle(
-                        color: Colors.grey[400],
+                        color: Colors.grey[300],
                         fontSize: 18.0,
                         letterSpacing: 1.0,
                       ),
                     ),
-                  ],
+                  ),
                 ),
                 SizedBox(height: 10.0),
                 Center(

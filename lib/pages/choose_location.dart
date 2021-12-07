@@ -34,9 +34,8 @@ class _ChooseLocationState extends State<ChooseLocation> {
     await weatherPreds[index].getPrediction();
   }
 
-  void updateTime(index) async {
+  void updateData(index) async {
     WorldTime instance = locations[index];
-    await instance.getTime();
 
     // navigate to homescreen
     Navigator.pop(context, {
@@ -44,7 +43,8 @@ class _ChooseLocationState extends State<ChooseLocation> {
       'flag': instance.flag,
       'time': instance.time,
       'isDayTime': instance.isDayTime,
-      'timeOfDay': instance.timeOfDay
+      'timeOfDay': instance.timeOfDay,
+      'pred': weatherPreds[index]
     });
   }
 
@@ -96,7 +96,7 @@ class _ChooseLocationState extends State<ChooseLocation> {
                 child: Card(
                   child: ListTile(
                     onTap: () async {
-
+                      updateData(index);
                     },
                     title: Text(
                         weatherPreds[index].getCity(0)
