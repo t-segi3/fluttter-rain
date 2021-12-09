@@ -47,18 +47,6 @@ class _HomeState extends State<Home> {
           //   backgroundColor: Colors.grey[850],
           //   elevation: 0,
           // ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () async {
-              Position position = await gh.getLatLong();
-              location ='Lat: ${position.latitude} , Long: ${position.longitude}';
-              print(location);
-              // setState((){
-              //   city = location;
-              // });
-            },
-            child: Icon(Icons.add),
-            backgroundColor: Colors.grey[800],
-          ),
           body: Container(
             padding: EdgeInsets.fromLTRB(30.0, 40.0, 30.0, 0),
             margin: EdgeInsets.fromLTRB(10.0, 50.0, 10.0, 0),
@@ -97,15 +85,15 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 SizedBox(height: 10.0),
-                Center(
-                  child: Text(
-                    data['time'],
-                    style: TextStyle(
-                      fontSize: 66,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+                // Center(
+                //   child: Text(
+                //     data['time'],
+                //     style: TextStyle(
+                //       fontSize: 66,
+                //       color: Colors.white,
+                //     ),
+                //   ),
+                // ),
                 SizedBox(height: 10.0),
                 Center(
                   child: Image(
