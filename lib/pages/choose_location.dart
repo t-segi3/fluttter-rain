@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:outrain/services/world_time.dart';
 import 'package:outrain/services/weather_prediction.dart';
+import 'package:http/http.dart';
+import 'dart:convert';
 
 class ChooseLocation extends StatefulWidget {
   const ChooseLocation({Key? key}) : super(key: key);
@@ -10,6 +12,8 @@ class ChooseLocation extends StatefulWidget {
 }
 
 class _ChooseLocationState extends State<ChooseLocation> {
+
+  final textFieldValueHolder = TextEditingController();
 
   List<WorldTime> locations = [
     WorldTime(url: 'Asia/Jakarta', location: 'Jakarta', flag: 'indonesia.png'), // jakarta
@@ -48,18 +52,36 @@ class _ChooseLocationState extends State<ChooseLocation> {
     });
   }
 
-  void setupListData() async {
-    await weatherPreds[0].getPrediction();
-    await weatherPreds[1].getPrediction();
-    await weatherPreds[2].getPrediction();
-    await weatherPreds[3].getPrediction();
+  Future<Map> searchCityByName(String city) async {
+    // try {
+      Response response = await get(Uri.parse('http://10.0.2.2:3000/api/searchByCity?city=$city'));
+
+      // decode
+      Map searchData = jsonDecode(response.body);
+
+      // print(searchData);
+
+      if (searchData["success"] == false) {
+        return searchData;
+      }
+
+      searchData["pred"] = WeatherPrediction(woeid: "${searchData["woeid"]}");
+      searchData["time"] = WorldTime(url: searchData["timezone"], location: city, flag: 'indonesia.png');
+
+      await searchData["pred"].getPrediction();
+      await searchData["time"].getTime();
+
+      return searchData;
+    // } catch (e) {
+    //   print(e);
+    // }
+    //
+    // return {};
   }
 
   @override
   void initState() {
     super.initState();
-
-    setupListData();
   }
 
   @override
@@ -72,66 +94,111 @@ class _ChooseLocationState extends State<ChooseLocation> {
         centerTitle: true,
         elevation: 0,
       ),
-      body: ListView.builder(
-        itemCount: weatherPreds.length,
-        itemExtent: 90,
-        itemBuilder: (context, index) {
-          return FutureBuilder(
-            future: Future.wait([weatherPreds[index].getPrediction(), locations[index].getTime()]),
-            builder: (context, snapshot) {
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: textFieldValueHolder,
+                ),
+              ),
+              FlatButton(
+                child: const Text(
+                  'Search',
+                  style: TextStyle(fontSize: 20.0),
+                ),
+                onPressed: () async {
 
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                    // padding: EdgeInsets.symmetric(vertical: 1, horizontal: 4),
-                    child: SizedBox(
-                      child: CircularProgressIndicator(),
-                      width: 60,
-                      height: 60,
-                    ),
-                );
-              }
+                  Map cityData = await searchCityByName(textFieldValueHolder.text);
 
-              return Padding(
-                padding: EdgeInsets.symmetric(vertical: 1, horizontal: 4),
-                child: Card(
-                  child: ListTile(
-                    onTap: () async {
-                      updateData(index);
-                    },
-                    title: Text(
-                        weatherPreds[index].getCity(0)
-                    ),
-                    subtitle: Text(
-                        weatherPreds[index].getWeatherName(0)
-                    ),
-                    leading: CircleAvatar(
-                      backgroundImage: AssetImage('assets/flags/${locations[index].flag}'),
-                    ),
-                    trailing: Container(
-                      width: 160,
-                      child: Row(
-                        children: [
-                          ClipRect(
-                            child: Image(
-                              image: NetworkImage('https://outrain-s3.s3.ap-southeast-1.amazonaws.com/png/${weatherPreds[index].getWeatherAbbr(0)}.png'),
-                            ),
+                  print(cityData);
+
+                  await Navigator.pushNamed(context, '/search-loading', arguments: {
+                    'success': cityData["success"],
+                    'country': cityData["country"],
+                    'timezone': cityData["timezone"],
+                    'pred': cityData["pred"],
+                    'time': cityData["time"]
+                  });
+
+                  // showDialog(
+                  //   context: context,
+                  //   builder: (context) {
+                  //     return AlertDialog(
+                  //       content: Text(textFieldValueHolder.text),
+                  //     );
+                  //   }
+                  // );
+                },
+              ),
+            ],
+          ),
+          Expanded(child: ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: weatherPreds.length,
+            itemExtent: 90,
+            itemBuilder: (context, index) {
+              return FutureBuilder(
+                future: Future.wait([weatherPreds[index].getPrediction(), locations[index].getTime()]),
+                builder: (context, snapshot) {
+
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      // padding: EdgeInsets.symmetric(vertical: 1, horizontal: 4),
+                      child: SizedBox(
+                        child: CircularProgressIndicator(),
+                        width: 60,
+                        height: 60,
+                      ),
+                    );
+                  }
+
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 1, horizontal: 4),
+                    child: Card(
+                      child: ListTile(
+                        onTap: () async {
+                          updateData(index);
+                        },
+                        title: Text(
+                            weatherPreds[index].getCity(0)
+                        ),
+                        subtitle: Text(
+                            weatherPreds[index].getWeatherName(0)
+                        ),
+                        leading: CircleAvatar(
+                          backgroundImage: AssetImage('assets/flags/${locations[index].flag}'),
+                        ),
+                        trailing: Container(
+                          width: 160,
+                          child: Row(
+                            children: [
+                              ClipRect(
+                                child: Image(
+                                  image: AssetImage('assets/weather_icons/png/${weatherPreds[index].getWeatherAbbr(0)}.png'),
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              ClipRect(
+                                child: Image(
+                                  image: AssetImage('assets/time_of_day_icon/${locations[index].timeOfDay}.png'),
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(width: 10),
-                          ClipRect(
-                            child: Image(
-                              image: AssetImage('assets/time_of_day_icon/${locations[index].timeOfDay}.png'),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ),
+                  );
+                },
               );
             },
-          );
-        },
-      ),
+          ),),
+        ],
+      )
     );
   }
 }

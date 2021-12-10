@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:outrain/pages/home.dart';
 import 'package:outrain/pages/loading.dart';
 import 'package:outrain/pages/choose_location.dart';
+import 'package:outrain/pages/loading_search.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -13,6 +14,7 @@ void main() {
       '/': (context) => Loading(),
       '/home': (context) => Home(),
       '/location': (context) => ChooseLocation(),
+      '/search-loading': (context) => LoadingSearch(),
     },
   ));
 }

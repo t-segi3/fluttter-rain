@@ -97,7 +97,7 @@ class _HomeState extends State<Home> {
                 SizedBox(height: 10.0),
                 Center(
                   child: Image(
-                    image: NetworkImage('https://outrain-s3.s3.ap-southeast-1.amazonaws.com/png/${data['pred'].getWeatherAbbr(0)}.png'),
+                    image: AssetImage('assets/weather_icons/png/${data['pred'].getWeatherAbbr(0)}.png'),
                     height: 200,
                     width: 200,
                   ),
