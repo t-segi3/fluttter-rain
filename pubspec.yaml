@@ -66,6 +66,7 @@ flutter:
     - assets/time_of_day_bg/
     - assets/time_of_day_icon/
     - assets/flags/
+    - assets/weather_icons/png/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
